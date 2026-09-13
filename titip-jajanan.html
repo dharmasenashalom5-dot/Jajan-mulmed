@@ -75,6 +75,18 @@
         button:hover {
             background-color: #1eb854;
         }
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .success-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -111,15 +123,17 @@
         <textarea id="catatan" rows="3" placeholder="Contoh: Sekalian titip keripik rasa balado 1 bungkus ya!"></textarea>
     </div>
 
-    <div class="form-group">
-        <label for="nomorWA">Nomor WhatsApp Tujuan:</label>
-        <input type="text" id="nomorWA" value="6281244221 52" placeholder="62...">
+    <button type="button" onclick="kirimWA()">Kirim Pesanan 🚀</button>
+    
+    <div class="success-message" id="successMessage">
+        ✅ Pesanan Anda sudah terkirim!
     </div>
-
-    <button type="button" onclick="kirimWA()">Kirim via WhatsApp 🚀</button>
 </div>
 
 <script>
+    // WhatsApp number (hidden from users)
+    const RECEIVER_NUMBER = "6281244221 52";
+
     function toggleKopiInput() {
         const minuman = document.getElementById('minuman').value;
         const kopiGroup = document.getElementById('kopiGroup');
@@ -132,12 +146,8 @@
     }
 
     function kirimWA() {
-        // Get WhatsApp number from input field
-        let nomorWA = document.getElementById('nomorWA').value.trim();
+        let nomorWA = RECEIVER_NUMBER.replace(/\s/g, '');
         
-        // Remove spaces from phone number
-        nomorWA = nomorWA.replace(/\s/g, '');
-
         const nama = document.getElementById('nama').value.trim();
         const minuman = document.getElementById('minuman').value;
         const detailKopi = document.getElementById('detailKopi').value.trim();
@@ -145,11 +155,6 @@
 
         if (!nama || !minuman) {
             alert("Harap isi nama dan pilih minuman terlebih dahulu!");
-            return;
-        }
-
-        if (!nomorWA) {
-            alert("Harap isi nomor WhatsApp terlebih dahulu!");
             return;
         }
 
@@ -171,9 +176,37 @@
 
         pesan += `\nMakasih ya!`;
 
-        // Encode teks untuk URL WhatsApp
+        // Save order to localStorage for dashboard
+        const order = {
+            id: Date.now(),
+            nama: nama,
+            minuman: minuman,
+            detailKopi: detailKopi,
+            catatan: catatan,
+            timestamp: new Date().toLocaleString('id-ID'),
+            status: 'pending'
+        };
+        
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        orders.push(order);
+        localStorage.setItem('orders', JSON.stringify(orders));
+
+        // Send to WhatsApp
         const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`;
         window.open(url, '_blank');
+
+        // Show success message
+        document.getElementById('successMessage').classList.add('show');
+        
+        // Reset form
+        setTimeout(() => {
+            document.getElementById('nama').value = '';
+            document.getElementById('minuman').value = '';
+            document.getElementById('detailKopi').value = '';
+            document.getElementById('catatan').value = '';
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('kopiGroup').classList.add('hidden');
+        }, 2000);
     }
 </script>
 
