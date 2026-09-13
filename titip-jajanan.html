@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titip Jajanan & Minuman</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: #25D366;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            width: 100%;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #1eb854;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🧃 Form Titip Jajanan</h2>
+    <p class="subtitle">Isi form ini biar pesanan kamu nggak salah!</p>
+
+    <div class="form-group">
+        <label for="nama">Nama Kamu:</label>
+        <input type="text" id="nama" placeholder="Contoh: Budi" required>
+    </div>
+
+    <div class="form-group">
+        <label for="minuman">Pilih Minuman Utama:</label>
+        <select id="minuman" onchange="toggleKopiInput()">
+            <option value="">-- Pilih Minuman --</option>
+            <option value="Air Putih Dingin">Air Putih Dingin</option>
+            <option value="Air Putih Biasa">Air Putih Biasa</option>
+            <option value="Es Teh">Es Teh</option>
+            <option value="Kopi">Kopi (Tulis detail di bawah)</option>
+            <option value="Lainnya">Lainnya / Mau Titip Jajanan Lain</option>
+        </select>
+    </div>
+
+    <!-- Input Tambahan Khusus Kopi -->
+    <div class="form-group hidden" id="kopiGroup">
+        <label for="detailKopi">Jenis / Merk Kopi & Detail Pesanan:</label>
+        <input type="text" id="detailKopi" placeholder="Contoh: Kopi Kenangan Mantan, Less Sugar, Es Sedikit">
+    </div>
+
+    <div class="form-group">
+        <label for="catatan">Catatan / Titip Jajanan Tambahan (Opsional):</label>
+        <textarea id="catatan" rows="3" placeholder="Contoh: Sekalian titip keripik rasa balado 1 bungkus ya!"></textarea>
+    </div>
+
+    <button type="button" onclick="kirimWA()">Kirim via WhatsApp 🚀</button>
+</div>
+
+<script>
+    function toggleKopiInput() {
+        const minuman = document.getElementById('minuman').value;
+        const kopiGroup = document.getElementById('kopiGroup');
+        
+        if (minuman === 'Kopi') {
+            kopiGroup.classList.remove('hidden');
+        } else {
+            kopiGroup.classList.add('hidden');
+        }
+    }
+
+    function kirimWA() {
+        // Nomor WhatsApp tujuan yang sudah dimasukkan secara otomatis
+        const nomorWA = "6282124422152"; 
+
+        const nama = document.getElementById('nama').value.trim();
+        const minuman = document.getElementById('minuman').value;
+        const detailKopi = document.getElementById('detailKopi').value.trim();
+        const catatan = document.getElementById('catatan').value.trim();
+
+        if (!nama || !minuman) {
+            alert("Harap isi nama dan pilih minuman terlebih dahulu!");
+            return;
+        }
+
+        let pesan = `Halo! Aku mau titip dong:\n\n`;
+        pesan += `👤 *Nama:* ${nama}\n`;
+        pesan += `🥤 *Pesanan:* ${minuman}\n`;
+
+        if (minuman === 'Kopi') {
+            if (!detailKopi) {
+                alert("Harap isi detail kopi yang kamu mau!");
+                return;
+            }
+            pesan += `☕ *Detail Kopi:* ${detailKopi}\n`;
+        }
+
+        if (catatan) {
+            pesan += `📝 *Catatan/Jajanan Lain:* ${catatan}\n`;
+        }
+
+        pesan += `\nMakasih ya!`;
+
+        // Encode teks untuk URL WhatsApp
+        const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(pesan)}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
