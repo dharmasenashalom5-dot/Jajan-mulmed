@@ -111,6 +111,11 @@
         <textarea id="catatan" rows="3" placeholder="Contoh: Sekalian titip keripik rasa balado 1 bungkus ya!"></textarea>
     </div>
 
+    <div class="form-group">
+        <label for="nomorWA">Nomor WhatsApp Tujuan:</label>
+        <input type="text" id="nomorWA" value="6282124422152" placeholder="62...">
+    </div>
+
     <button type="button" onclick="kirimWA()">Kirim via WhatsApp 🚀</button>
 </div>
 
@@ -126,10 +131,9 @@
         }
     }
 
-    <div class="form-group">
-    <label for="nomorWA">Nomor WhatsApp Tujuan:</label>
-    <input type="text" id="nomorWA" value="6282124422152" placeholder="62...">
-</div>
+    function kirimWA() {
+        // Get WhatsApp number from input field
+        const nomorWA = document.getElementById('nomorWA').value.trim();
 
         const nama = document.getElementById('nama').value.trim();
         const minuman = document.getElementById('minuman').value;
@@ -138,6 +142,11 @@
 
         if (!nama || !minuman) {
             alert("Harap isi nama dan pilih minuman terlebih dahulu!");
+            return;
+        }
+
+        if (!nomorWA) {
+            alert("Harap isi nomor WhatsApp terlebih dahulu!");
             return;
         }
 
