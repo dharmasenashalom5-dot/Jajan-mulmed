@@ -113,7 +113,7 @@
 
     <div class="form-group">
         <label for="nomorWA">Nomor WhatsApp Tujuan:</label>
-        <input type="text" id="nomorWA" value="6282124422152" placeholder="62...">
+        <input type="text" id="nomorWA" value="6281244221 52" placeholder="62...">
     </div>
 
     <button type="button" onclick="kirimWA()">Kirim via WhatsApp 🚀</button>
@@ -133,7 +133,10 @@
 
     function kirimWA() {
         // Get WhatsApp number from input field
-        const nomorWA = document.getElementById('nomorWA').value.trim();
+        let nomorWA = document.getElementById('nomorWA').value.trim();
+        
+        // Remove spaces from phone number
+        nomorWA = nomorWA.replace(/\s/g, '');
 
         const nama = document.getElementById('nama').value.trim();
         const minuman = document.getElementById('minuman').value;
